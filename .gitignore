@@ -1,0 +1,14 @@
+
+# Ignore all log files
+*.log
+
+# Ignore all saved models
+*.h5f
+*.pth.tar
+
+# Ignore config file
+utils/config.py
+
+# Ignore pycache files
+*__pycache__/*
+*.pyc
