@@ -125,9 +125,9 @@ class KerasDDPGAgent(KerasAgent):
         random_process = OrnsteinUhlenbeckProcess(theta=.15, mu=0., sigma=.2, size=nb_actions)
         
         self.agent = DDPGAgent(nb_actions=nb_actions, actor=actor, critic=critic, critic_action_input=action_input,
-                               memory=memory, nb_steps_warmup_critic=100, nb_steps_warmup_actor=100, random_process=random_process,
-                               gamma=.99, target_model_update=1e-3, delta_clip=1.)
+                               memory=memory, batch_size=128, nb_steps_warmup_critic=128, nb_steps_warmup_actor=128, 
+                               random_process=random_process, gamma=.75, target_model_update=1e-2, delta_clip=2.)
         
-        self.agent.compile(Adam(lr=.001, clipnorm=1.), metrics=['mae'])
+        self.agent.compile(Adam(lr=.01, clipnorm=2.), metrics=['mae'])
 
         self.filename = filename

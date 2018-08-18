@@ -6,16 +6,18 @@ from osim.http.client import Client
 from env.wrappers import Client_To_Env, Env_With_Dict_Observation, Env_With_JSONable_Actions
 from env.dict_to_list import Dict_To_List
 from utils.config import remote_base, crowdai_token
-from agents.keras_ddpg_agent import KerasDDPGAgent as SpecifiedAgent
+from agents.keras_ddpg_agent import KerasDDPGAgent as DDPGAgent
+from agents.tensorforce_ppo_agent import TensorforcePPOAgent as PPOAgent
+
 
 from test import test
 from submit import submit
 
 import os
-os.environ["CUDA_VISIBLE_DEVICES"]="0"
+os.environ["CUDA_VISIBLE_DEVICES"]="2"
 
 
-def train(agent, env, nb_steps = 100000):
+def train(agent, env, nb_steps = 1000):
     agent.train(env, nb_steps = nb_steps)
     
 
@@ -35,7 +37,8 @@ def main(saved_model=None):
 
     # Specify Agent
 
-    agent = SpecifiedAgent(env.observation_space, env.action_space)
+    #agent = SpecifiedAgent(env.observation_space, env.action_space)
+    agent = PPOAgent(env.observation_space, env.action_space)
     
     if saved_model:
     	agent.load(saved_model)

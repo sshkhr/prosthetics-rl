@@ -5,6 +5,8 @@
 # Ignore all saved models
 *.h5f
 *.pth.tar
+TensorforcePPOAgent/*
+saved/*
 
 # Ignore config file
 utils/config.py
