@@ -3,7 +3,6 @@
 import gym, numpy as np
 from osim.http.client import Client
 
-
 class EnvironmentWrapper:
     def __init__(self, env):
         """
@@ -82,3 +81,48 @@ class Env_With_Dict_Observation(EnvironmentWrapper):
 
     def step(self, action):
         return self.env.step(action, project=False)
+
+class Env_With_Discreet_Actions(EnvironmentWrapper):
+    def __init__(self, env):
+        """
+        Environment wrapper that quantises actions to discreet values.
+        """
+        super().__init__(env)
+        self.env = env
+        self.time_limit = 300
+    
+    def reset(self):
+        return self.env.reset(project=False)
+
+    def discretise_action(action):
+        bins = np.array([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
+        discrete_action = np.digitize(action, bins)
+        return action
+
+    def step(self, action):
+        action = discretise_action(action)
+        return self.env.step(action, project=False)
+
+
+class Env_With_Reward_Shaping(EnvironmentWrapper):
+    def __init__(self, env):
+        """
+        Environment wrapper that wraps local environment to use dict-type
+        observation by setting project=False. This can be deprecated once
+        the default observation is dict-type rather than list-type.
+        """
+        super().__init__(env)
+        self.env = env
+        self.time_limit = 300
+    
+    def reset(self):
+        return self.env.reset(project=False)
+
+    def shape_reward(observation, reward, done):
+        shaped_reward = reward
+        return shaped_reward
+
+    def step(self, action):
+        observation, reward, done, info = env.step(action, project=False)
+        shaped_reward = shape_reward(observation, reward, done)
+        return observation, shaped_reward, done, info
